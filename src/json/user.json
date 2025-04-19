@@ -1,0 +1,170 @@
+[
+  {
+    "_id": {
+      "$oid": "cbd4ef431349b560d3c8078b"
+    },
+    "username": "alpha_coder",
+    "email": "alphacoder@connect.org",
+    "password": "$2b$10$Yyz8L6BblENlM3IIBxl1ceCcZJT2JKfHgeI2ODr/9HhQ0X7kuoPFi",
+    "profile": "https://avatar.site.com/images/alpha_coder.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:00.534Z",
+    "updatedAt": "2025-04-21T10:13:00.534Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "9fd306c7c315392885441f6e"
+    },
+    "username": "gamma_dev",
+    "email": "gammadev@workplace.net",
+    "password": "$2b$10$GLtE/IxY3ZZLb5zXrpGRi.YBcftOVTs7QXk0YRu4OZfcD6s08l6Gm",
+    "profile": "https://profile.cloud/users/gamma_dev.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:00.871Z",
+    "updatedAt": "2025-04-22T10:13:00.871Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a8b64dac0f5cd3e5fa73fef9"
+    },
+    "username": "theta_manager",
+    "email": "thetamanager@connect.org",
+    "password": "$2b$10$o8oLYWnEkjlaVWV.QtMEOOv9ML7WDU.XpHdyZP6HUdMq2Hqul6rB2",
+    "profile": "https://profile.cloud/users/theta_manager.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:01.144Z",
+    "updatedAt": "2025-04-23T10:13:01.144Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "62cab171f8b7cf72260bf761"
+    },
+    "username": "alpha_coder",
+    "email": "alphacoder@workplace.net",
+    "password": "$2b$10$./j/sAwt4k3XVaTPSqj1bOm1d624BD2z7BBmHhupbFbP4JwNEyWsu",
+    "profile": "https://profile.cloud/users/alpha_coder.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:01.418Z",
+    "updatedAt": "2025-04-18T10:13:01.418Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "74bea8ff57b409daeaaf3f04"
+    },
+    "username": "delta_ops",
+    "email": "deltaops@connect.org",
+    "password": "$2b$10$6uYMi/yrdj0gAALIzDXhj.9VM32tyK6hdGgFCWBCGhJSWcs.WaNa2",
+    "profile": "https://avatar.site.com/images/delta_ops.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:01.695Z",
+    "updatedAt": "2025-04-21T10:13:01.695Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "fda10d8ae8fe8e515cab7292"
+    },
+    "username": "iota_engineer",
+    "email": "iotaengineer@workplace.net",
+    "password": "$2b$10$78W/UyZIXEpKJ2HZHLgnWONbH9kS/fgb6qJpFd1JIAGRE1olXvYRG",
+    "profile": "https://profile.cloud/users/iota_engineer.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:01.971Z",
+    "updatedAt": "2025-04-23T10:13:01.971Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "01bdf2a8a448edef181d04a4"
+    },
+    "username": "delta_ops",
+    "email": "deltaops@workplace.net",
+    "password": "$2b$10$HS0bWv6SzSkC3w3Sk.p5h.p/kPt1fkyXNeMIoDNY0LoxbIXTMWu4G",
+    "profile": "https://profile.cloud/users/delta_ops.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:02.247Z",
+    "updatedAt": "2025-04-22T10:13:02.247Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "1a7d639544d1758919d86a2e"
+    },
+    "username": "gamma_dev",
+    "email": "gammadev@connect.org",
+    "password": "$2b$10$VGdH78ji20G8Q5afZ/a3CuD98R5ZnCakeXPm1nTxEHq6FwA03sTJ6",
+    "profile": "https://avatar.site.com/images/gamma_dev.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:02.522Z",
+    "updatedAt": "2025-04-24T10:13:02.522Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "49aebdc01a38ded53b72c29f"
+    },
+    "username": "eta_analyst",
+    "email": "etaanalyst@innovate.tech",
+    "password": "$2b$10$v7Jl7HKp1.Y7GLMMGeFLwuGbwtGnpy1ZaAqpmuT9amaGl2giuhzU.",
+    "profile": "https://avatar.site.com/images/eta_analyst.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:02.813Z",
+    "updatedAt": "2025-04-20T10:13:02.813Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "d59aa61cc429e0b1b64dc300"
+    },
+    "username": "epsilon_ux",
+    "email": "epsilonux@workplace.net",
+    "password": "$2b$10$8jRsLhnKTwYdY1aqehwWMup9oR2e1gKPdAJKStZvaWag6bx3HRjra",
+    "profile": "https://avatar.site.com/images/epsilon_ux.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:13:03.087Z",
+    "updatedAt": "2025-04-24T10:13:03.087Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4772d002f0dc50357d2ce177"
+    },
+    "username": "thomas",
+    "email": "thomas@gmail.com",
+    "password": "$2b$10$7p.xPs2JwnSlSsmT2a0wvOmcZlbO9l94g0z/U854UnBD7IdwJZpnm",
+    "profile": "https://avatar.site.com/images/delta_ops.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:14:19.413Z",
+    "updatedAt": "2025-04-19T10:14:19.413Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "42eb52479c180227957073b9"
+    },
+    "username": "harshilbodara",
+    "email": "developer.harshilbodara@gmail.com",
+    "password": "$2b$10$j8K6ZjJLmi7lzkg2CLrEVe3uSjrvYVdBmEBceUH/iOmX4TGG66hxy",
+    "profile": "https://profile.cloud/users/delta_ops.jpg",
+    "connections": 0,
+    "followingCompanies": [],
+    "createdAt": "2025-04-18T10:14:19.324Z",
+    "updatedAt": "2025-04-21T10:14:19.324Z",
+    "__v": 0
+  }
+]

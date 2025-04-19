@@ -1,0 +1,132 @@
+[
+  {
+    "_id": {
+      "$oid": "d30b0beda349a6b7b2d1da70"
+    },
+    "name": "Apple",
+    "description": "Designs, manufactures, and markets consumer electronics, software, and online services.",
+    "logo": "https://www.apple.com/ac/globalnav/4/en_US/images/ac-logo.svg",
+    "tags": ["technology", "electronics", "software"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a14e995d5f15ea53fcdff65d"
+    },
+    "name": "Samsung",
+    "description": "South Korean multinational manufacturing conglomerate.",
+    "logo": "https://www.samsung.com/etc/designs/smg/global/svg/logo.svg",
+    "tags": ["electronics", "technology", "manufacturing"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0062ef6a7f182f8bc54252aa"
+    },
+    "name": "Tesla",
+    "description": "Designs, manufactures and sells electric vehicles, electric vehicle powertrain components, and battery products.",
+    "logo": "https://www.tesla.com/themes/custom/tesla_theme/assets/img/tesla-logo.svg",
+    "tags": ["electric vehicles", "automotive", "technology"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "b422806c6719c8a0e00be7cc"
+    },
+    "name": "Twitter",
+    "description": "Social media platform for real-time communication.",
+    "logo": "https://about.twitter.com/content/dam/about-twitter/en/company/brandassets/v2/Twitter-logo-blue.png",
+    "tags": ["social media", "news", "microblogging"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "d76a8a1aa5f0d9427f5d4bf7"
+    },
+    "name": "Tesla",
+    "description": "Designs, manufactures and sells electric vehicles, electric vehicle powertrain components, and battery products.",
+    "logo": "https://www.tesla.com/themes/custom/tesla_theme/assets/img/tesla-logo.svg",
+    "tags": ["electric vehicles", "automotive", "technology"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "ba74b5ab4516827baefdce48"
+    },
+    "name": "Samsung",
+    "description": "South Korean multinational manufacturing conglomerate.",
+    "logo": "https://www.samsung.com/etc/designs/smg/global/svg/logo.svg",
+    "tags": ["electronics", "technology", "manufacturing"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "d9eedd64249564ea1ded6fea"
+    },
+    "name": "Google",
+    "description": "Search engine giant.",
+    "logo": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "tags": ["search", "advertising", "technology"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "7a6a37e14a8d665a84873508"
+    },
+    "name": "Microsoft",
+    "description": "Technology company that develops, manufactures, licenses, supports, and sells computer software, consumer electronics, personal computers, and related services.",
+    "logo": "https://img-prod-cms.valueadd.com/resize/0x0/https://static.wixstatic.com/media/f42155_855715c9957c485994b599a515b5657e.png",
+    "tags": ["software", "cloud computing", "technology"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "d734396aa1a73a82352dd3c7"
+    },
+    "name": "Netflix",
+    "description": "Streaming service offering a wide variety of award-winning TV shows, movies, anime, documentaries, and more.",
+    "logo": "https://www.netflix.com/යි/logo-3d.png",
+    "tags": ["streaming", "entertainment", "movies"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "8f1139a01d5f0ef87ffa6ef7"
+    },
+    "name": "Google",
+    "description": "Search engine giant.",
+    "logo": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "tags": ["search", "advertising", "technology"],
+    "followers": [],
+    "createdAt": "2025-04-19T04:22:15.330Z",
+    "updatedAt": "2025-04-19T04:22:15.330Z",
+    "__v": 0
+  }
+]
