@@ -28,7 +28,7 @@ export const handleFriendRequest = asyncHandler(
 
         case "accept": {
           const { requestId } = req.body;
-          await FriendRequestService.acceptFriendRequest(requestId);
+          await FriendRequestService.acceptFriendRequest(requestId, userId);
           return res
             .status(200)
             .json({ error: false, message: "Friend request accepted!" });
@@ -36,7 +36,7 @@ export const handleFriendRequest = asyncHandler(
 
         case "reject": {
           const { requestId } = req.body;
-          await FriendRequestService.rejectFriendRequest(requestId);
+          await FriendRequestService.rejectFriendRequest(requestId, userId);
           return res
             .status(200)
             .json({ error: false, message: "Friend request rejected!" });

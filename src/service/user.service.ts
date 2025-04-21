@@ -172,32 +172,61 @@ export const getConnections = async (userId: string) => {
 
 export const getMyConnections = async (userId: string) => {
   try {
-    const acceptedRequests = (await FriendRequest.find({
+    // Friend requests the user sent and were accepted
+    const sentAcceptedRequests = (await FriendRequest.find({
       sender: userId,
       status: "accepted",
     }).populate("receiver", "username email city designation coverImage")) as unknown as {
-      sender: Types.ObjectId;
       receiver: {
         _id: Types.ObjectId;
         username: string;
         email: string;
-        city:string;
-        designation:string;
-        coverImage:string;
+        city: string;
+        designation: string;
+        coverImage: string;
       };
       status: string;
     }[];
 
-    const userConnections = acceptedRequests.map((request) => ({
-      _id: request.receiver._id,
-      username: request.receiver.username,
-      email: request.receiver.email,
-      city:  request.receiver.city,
-      designation: request.receiver.designation,
-      coverImage: request.receiver.coverImage,
-      type: "user",
-    }));
+    // Friend requests the user received and were accepted
+    const receivedAcceptedRequests = (await FriendRequest.find({
+      receiver: userId,
+      status: "accepted",
+    }).populate("sender", "username email city designation coverImage")) as unknown as {
+      sender: {
+        _id: Types.ObjectId;
+        username: string;
+        email: string;
+        city: string;
+        designation: string;
+        coverImage: string;
+      };
+      status: string;
+    }[];
 
+    // Combine both directions into a single list
+    const userConnections = [
+      ...sentAcceptedRequests.map((request) => ({
+        _id: request.receiver._id,
+        username: request.receiver.username,
+        email: request.receiver.email,
+        city: request.receiver.city,
+        designation: request.receiver.designation,
+        coverImage: request.receiver.coverImage,
+        type: "user",
+      })),
+      ...receivedAcceptedRequests.map((request) => ({
+        _id: request.sender._id,
+        username: request.sender.username,
+        email: request.sender.email,
+        city: request.sender.city,
+        designation: request.sender.designation,
+        coverImage: request.sender.coverImage,
+        type: "user",
+      })),
+    ];
+
+    // Companies the user follows
     const user = await User.findById(userId).populate({
       path: "followingCompanies",
       select: "name description coverImage tags followers",
@@ -213,9 +242,8 @@ export const getMyConnections = async (userId: string) => {
       type: "company",
     }));
 
+    // Combine both user and company connections
     const combinedConnections = [...userConnections, ...followedCompanies];
-
-   
 
     return combinedConnections;
   } catch (error: any) {

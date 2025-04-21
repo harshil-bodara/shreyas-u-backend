@@ -21,18 +21,24 @@ export const sendFriendRequest = async (
   return { message: "Friend request sent", request };
 };
 
-export const acceptFriendRequest = async (requestId: string) => {
-  const request = await FriendRequest.findById(requestId);
+export const acceptFriendRequest = async (
+  senderId: string,
+  receiverId: string
+) => {
+  const request = await FriendRequest.findOne({
+    sender: senderId,
+    receiver: receiverId,
+    status: "pending",
+  });
 
-  if (!request || request.status !== "pending") {
-    throw new Error("Request not found or already handled");
+  if (!request) {
+    throw new Error("Friend request not found or already handled");
   }
 
   request.status = "accepted";
   request.acceptedAt = new Date();
   await request.save();
 
-  // Increment connections for both sender and receiver
   await Promise.all([
     User.findByIdAndUpdate(request.sender, { $inc: { connections: 1 } }),
     User.findByIdAndUpdate(request.receiver, { $inc: { connections: 1 } }),
@@ -41,17 +47,25 @@ export const acceptFriendRequest = async (requestId: string) => {
   return { message: "Friend request accepted and connections updated" };
 };
 
-export const rejectFriendRequest = async (requestId: string) => {
-  const request = await FriendRequest.findById(requestId);
-  if (!request || request.status !== "pending")
-    throw new Error("Request not found or already handled");
+export const rejectFriendRequest = async (
+  senderId: string,
+  receiverId: string
+) => {
+  const request = await FriendRequest.findOne({
+    sender: senderId,
+    receiver: receiverId,
+    status: "pending",
+  });
+
+  if (!request) {
+    throw new Error("Friend request not found or already handled");
+  }
 
   request.status = "rejected";
   await request.save();
 
   return { message: "Friend request rejected" };
 };
-
 export const getFriendRequests = async (userId: string) => {
   const requests = await FriendRequest.find({
     $or: [{ sender: userId }, { receiver: userId }],
