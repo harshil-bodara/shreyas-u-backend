@@ -4,6 +4,7 @@ import { jwtToken } from "../utils/jwtTokenHandler";
 import FriendRequest from "../models/FriendRequest";
 import { Types } from "mongoose";
 import UserIgnore from "../models/UserIgnore";
+import Company from "../models/Company";
 
 export const loginUser = async (email: string, password: string) => {
   const user = await User.findOne({ email });
@@ -162,9 +163,6 @@ export const getConnections = async (userId: string) => {
 
     const combinedConnections = [...userConnections, ...followedCompanies];
 
-    if (combinedConnections.length === 0) {
-      throw new Error("No connections found");
-    }
 
     return combinedConnections;
   } catch (error: any) {
@@ -225,11 +223,78 @@ export const getMyConnections = async (userId: string) => {
   }
 };
 
+// export const withdrawConnection = async (
+//   userId: string,
+//   targetUserId: string
+// ) => {
+//   try {
+//     const request = await FriendRequest.findOne({
+//       $or: [
+//         { sender: userId, receiver: targetUserId },
+//         { sender: targetUserId, receiver: userId },
+//       ],
+//       status: { $in: ["pending", "accepted"] },
+//     });
+
+//     if (!request) {
+//       throw new Error("No pending or accepted connection found to withdraw");
+//     }
+
+//     // If it's pending, allow withdraw by delete
+//     if (request.status === "pending") {
+//       await FriendRequest.deleteOne({ _id: request._id });
+//     }
+
+//     // If it's accepted, remove and update connection counts
+//     if (request.status === "accepted") {
+//       await FriendRequest.deleteOne({ _id: request._id });
+
+//       await Promise.all([
+//         User.findByIdAndUpdate(userId, { $inc: { connections: -1 } }),
+//         User.findByIdAndUpdate(targetUserId, { $inc: { connections: -1 } }),
+//       ]);
+//     }
+
+//     return {
+//       message: "Connection withdrawn successfully",
+//       connectionRemoved: true,
+//       status: request.status,
+//       targetUserId,
+//     };
+//   } catch (error: any) {
+//     throw new Error(error.message || "Failed to withdraw connection");
+//   }
+// };
+
+
 export const withdrawConnection = async (
   userId: string,
   targetUserId: string
 ) => {
   try {
+    // 1. Check if target is a company
+    const company = await Company.findById(targetUserId);
+
+    if (company) {
+      // 2. If it's a company, unfollow logic
+      await Promise.all([
+        Company.findByIdAndUpdate(targetUserId, {
+          $pull: { followers: userId },
+        }),
+        User.findByIdAndUpdate(userId, {
+          $pull: { followingCompanies: targetUserId },
+        }),
+      ]);
+
+      return {
+        message: "Unfollowed company successfully",
+        connectionRemoved: true,
+        type: "company",
+        targetUserId,
+      };
+    }
+
+    // 3. If not a company, it's a user-to-user connection
     const request = await FriendRequest.findOne({
       $or: [
         { sender: userId, receiver: targetUserId },
@@ -242,12 +307,10 @@ export const withdrawConnection = async (
       throw new Error("No pending or accepted connection found to withdraw");
     }
 
-    // If it's pending, allow withdraw by delete
     if (request.status === "pending") {
       await FriendRequest.deleteOne({ _id: request._id });
     }
 
-    // If it's accepted, remove and update connection counts
     if (request.status === "accepted") {
       await FriendRequest.deleteOne({ _id: request._id });
 
@@ -260,6 +323,7 @@ export const withdrawConnection = async (
     return {
       message: "Connection withdrawn successfully",
       connectionRemoved: true,
+      type: "user",
       status: request.status,
       targetUserId,
     };
