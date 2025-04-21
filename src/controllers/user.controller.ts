@@ -54,7 +54,7 @@ export const getConnections = asyncHandler(
       });
     }
   }
-);
+); 
 
 export const getMyConnections = asyncHandler(
   async (req: Request, res: Response) => {

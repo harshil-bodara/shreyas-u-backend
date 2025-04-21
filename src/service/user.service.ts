@@ -107,27 +107,28 @@ export const getConnections = async (userId: string) => {
       status: string;
     }[];
 
+    // Helper function to safely extract data
+    const safelyGetUserData = (user: any) => {
+      if (user) {
+        return {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          city: user.city,
+          designation: user.designation,
+          coverImage: user.coverImage,
+        };
+      }
+      return null;
+    };
+
     const userConnections = [
-      ...sentPendingRequests.map((request) => ({
-        _id: request.receiver._id,
-        username: request.receiver.username,
-        email: request.receiver.email,
-        city: request.receiver.city,
-        designation: request.receiver.designation,
-        coverImage: request.receiver.coverImage,
-        type: "user",
-        direction: "sent",
-      })),
-      ...receivedPendingRequests.map((request) => ({
-        _id: request.sender._id,
-        username: request.sender.username,
-        email: request.sender.email,
-        city: request.sender.city,
-        designation: request.sender.designation,
-        coverImage: request.sender.coverImage,
-        type: "user",
-        direction: "received",
-      })),
+      ...sentPendingRequests
+        .map((request) => safelyGetUserData(request.receiver))
+        .filter((data) => data !== null), // Ensure only valid data is included
+      ...receivedPendingRequests
+        .map((request) => safelyGetUserData(request.sender))
+        .filter((data) => data !== null), // Ensure only valid data is included
     ];
 
     // Followed companies
@@ -148,13 +149,10 @@ export const getConnections = async (userId: string) => {
 
     const combinedConnections = [...userConnections, ...followedCompanies];
 
-    if (combinedConnections.length === 0) {
-      throw new Error("No connections found");
-    }
-
     return combinedConnections;
   } catch (error: any) {
-    throw new Error(error.message);
+    console.error("Error fetching connections:", error.message);
+    throw new Error(error.message); // Re-throw or handle error as appropriate
   }
 };
 
@@ -205,9 +203,7 @@ export const getMyConnections = async (userId: string) => {
 
     const combinedConnections = [...userConnections, ...followedCompanies];
 
-    if (combinedConnections.length === 0) {
-      throw new Error("No connections found");
-    }
+   
 
     return combinedConnections;
   } catch (error: any) {
