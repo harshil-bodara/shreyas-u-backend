@@ -6,11 +6,13 @@ const userSchema = new Schema<IUser>(
     username: String,
     email: String,
     password: String,
-    profile: String,
+    coverImage: String,
     connections: {
       type: Number,
       default: 0,
     },
+    designation:String,
+    city:String,
     followingCompanies: [{ type: Schema.Types.ObjectId, ref: "Company" }],
   },
   { timestamps: true }

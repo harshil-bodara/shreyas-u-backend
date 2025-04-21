@@ -4,9 +4,11 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  profile?: Record<string, any>;
+  coverImage?: Record<string, any>;
   connections: number;
   followingCompanies: Types.ObjectId[];
+  designation:string,
+  city:string
 }
 
 export interface IFriendRequest extends Document {
@@ -20,7 +22,7 @@ export interface IFriendRequest extends Document {
 export interface ICompany extends Document {
   name: string;
   description: string;
-  logo: string;
+  coverImage: string;
   tags: string[];
   followers: Types.ObjectId[];
 }

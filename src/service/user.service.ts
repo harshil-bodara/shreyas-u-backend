@@ -30,9 +30,7 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getUsersForInvitation = async (userId: string) => {
   try {
-    const allUsers = await User.find({ _id: { $ne: userId } }).select(
-      "-password"
-    );
+    const allUsers = await User.find({ _id: { $ne: userId } }).select("-password");
 
     const connectedUsers = await FriendRequest.find({
       $or: [
@@ -41,43 +39,141 @@ export const getUsersForInvitation = async (userId: string) => {
       ],
     });
 
-    const connectedUserIds = connectedUsers.map((request) =>
-      request.sender.toString() === userId
-        ? new Types.ObjectId(request.receiver)
-        : new Types.ObjectId(request.sender)
+    const connectedUserIds = connectedUsers.map((req) =>
+      req.sender.toString() === userId ? req.receiver : req.sender
     );
 
     const ignoredEntries = await UserIgnore.find({ userId });
-    const ignoredUserIds = ignoredEntries
-      .map((entry) => entry.ignoredUserId)
-      .filter((ignoredUserId) => ignoredUserId != null)
-      .map((ignoredUserId) => new Types.ObjectId(ignoredUserId));
+    const ignoredUserIds = ignoredEntries.map((entry) => entry.ignoredUserId);
 
-    const usersToInvite = allUsers.filter(
-      (user) =>
-        !connectedUserIds.some((connectedUserId) =>
-          connectedUserId.equals(user._id)
-        ) &&
-        !ignoredUserIds.some((ignoredUserId) => ignoredUserId.equals(user._id))
+    const pendingRequests = await FriendRequest.find({
+      $or: [
+        { sender: userId, status: "pending" },
+        { receiver: userId, status: "pending" },
+      ],
+    });
+
+    const pendingRequestUserIds = pendingRequests.map((req) =>
+      req.sender.toString() === userId ? req.receiver : req.sender
     );
+
+    const usersToInvite = allUsers.filter((user) => {
+      const userIdStr = user._id.toString();
+      return (
+        !connectedUserIds.some((id) => id && id.toString() === userIdStr) &&
+        !ignoredUserIds.some((id) => id && id.toString() === userIdStr) &&
+        !pendingRequestUserIds.some((id) => id && id.toString() === userIdStr)
+      );
+    });
 
     return usersToInvite;
   } catch (error) {
+    console.error(error);
     throw new Error("Error fetching users for invitation");
   }
 };
 
 export const getConnections = async (userId: string) => {
   try {
+    // Sent pending requests
+    const sentPendingRequests = (await FriendRequest.find({
+      sender: userId,
+      status: "pending",
+    }).populate("receiver", "username email city designation coverImage")) as unknown as {
+      receiver: {
+        _id: Types.ObjectId;
+        username: string;
+        email: string;
+        city: string;
+        designation: string;
+        coverImage: string;
+      };
+      status: string;
+    }[];
+
+    // Received pending requests
+    const receivedPendingRequests = (await FriendRequest.find({
+      receiver: userId,
+      status: "pending",
+    }).populate("sender", "username email city designation coverImage")) as unknown as {
+      sender: {
+        _id: Types.ObjectId;
+        username: string;
+        email: string;
+        city: string;
+        designation: string;
+        coverImage: string;
+      };
+      status: string;
+    }[];
+
+    const userConnections = [
+      ...sentPendingRequests.map((request) => ({
+        _id: request.receiver._id,
+        username: request.receiver.username,
+        email: request.receiver.email,
+        city: request.receiver.city,
+        designation: request.receiver.designation,
+        coverImage: request.receiver.coverImage,
+        type: "user",
+        direction: "sent",
+      })),
+      ...receivedPendingRequests.map((request) => ({
+        _id: request.sender._id,
+        username: request.sender.username,
+        email: request.sender.email,
+        city: request.sender.city,
+        designation: request.sender.designation,
+        coverImage: request.sender.coverImage,
+        type: "user",
+        direction: "received",
+      })),
+    ];
+
+    // Followed companies
+    const user = await User.findById(userId).populate({
+      path: "followingCompanies",
+      select: "name description coverImage tags followers",
+    });
+
+    const followedCompanies = (user?.followingCompanies || []).map((company: any) => ({
+      _id: company._id,
+      name: company.name,
+      description: company.description,
+      coverImage: company.coverImage,
+      tags: company.tags,
+      connectionCount: company.followers?.length || 0,
+      type: "company",
+    }));
+
+    const combinedConnections = [...userConnections, ...followedCompanies];
+
+    if (combinedConnections.length === 0) {
+      throw new Error("No connections found");
+    }
+
+    return combinedConnections;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+export const getMyConnections = async (userId: string) => {
+  try {
     const acceptedRequests = (await FriendRequest.find({
       sender: userId,
       status: "accepted",
-    }).populate("receiver", "username email")) as unknown as {
+    }).populate("receiver", "username email city designation coverImage")) as unknown as {
       sender: Types.ObjectId;
       receiver: {
         _id: Types.ObjectId;
         username: string;
         email: string;
+        city:string;
+        designation:string;
+        coverImage:string;
       };
       status: string;
     }[];
@@ -86,19 +182,22 @@ export const getConnections = async (userId: string) => {
       _id: request.receiver._id,
       username: request.receiver.username,
       email: request.receiver.email,
+      city:  request.receiver.city,
+      designation: request.receiver.designation,
+      coverImage: request.receiver.coverImage,
       type: "user",
     }));
 
     const user = await User.findById(userId).populate({
       path: "followingCompanies",
-      select: "name description logo tags followers",
+      select: "name description coverImage tags followers",
     });
 
     const followedCompanies = (user?.followingCompanies || []).map((company: any) => ({
       _id: company._id,
       name: company.name,
       description: company.description,
-      logo: company.logo,
+      coverImage: company.coverImage,
       tags: company.tags,
       connectionCount: company.followers?.length || 0,
       type: "company",
@@ -121,25 +220,37 @@ export const withdrawConnection = async (
   targetUserId: string
 ) => {
   try {
-    const request = await FriendRequest.findOneAndDelete({
+    const request = await FriendRequest.findOne({
       $or: [
-        { sender: userId, receiver: targetUserId, status: "accepted" },
-        { sender: targetUserId, receiver: userId, status: "accepted" },
+        { sender: userId, receiver: targetUserId },
+        { sender: targetUserId, receiver: userId },
       ],
+      status: { $in: ["pending", "accepted"] },
     });
 
     if (!request) {
-      throw new Error("No accepted connection found to withdraw");
+      throw new Error("No pending or accepted connection found to withdraw");
     }
 
-    await Promise.all([
-      User.findByIdAndUpdate(userId, { $inc: { connections: -1 } }),
-      User.findByIdAndUpdate(targetUserId, { $inc: { connections: -1 } }),
-    ]);
+    // If it's pending, allow withdraw by delete
+    if (request.status === "pending") {
+      await FriendRequest.deleteOne({ _id: request._id });
+    }
+
+    // If it's accepted, remove and update connection counts
+    if (request.status === "accepted") {
+      await FriendRequest.deleteOne({ _id: request._id });
+
+      await Promise.all([
+        User.findByIdAndUpdate(userId, { $inc: { connections: -1 } }),
+        User.findByIdAndUpdate(targetUserId, { $inc: { connections: -1 } }),
+      ]);
+    }
 
     return {
       message: "Connection withdrawn successfully",
       connectionRemoved: true,
+      status: request.status,
       targetUserId,
     };
   } catch (error: any) {

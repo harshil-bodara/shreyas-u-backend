@@ -56,6 +56,52 @@ export const getConnections = asyncHandler(
   }
 );
 
+export const getMyConnections = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) {
+        return res
+          .status(401)
+          .json({ error: true, message: "Unauthorized user" });
+      }
+
+      const connections = await UserService.getMyConnections(userId);
+
+      res.status(200).json({ error: false, connections });
+    } catch (error: any) {
+      res.status(500).json({
+        error: true,
+        message: error.message || "Failed to fetch connections",
+      });
+    }
+  }
+);
+
+export const getFollowing = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) {
+        return res
+          .status(401)
+          .json({ error: true, message: "Unauthorized user" });
+      }
+
+      const connections = await UserService.getMyConnections(userId);
+
+      res.status(200).json({ error: false, connections });
+    } catch (error: any) {
+      res.status(500).json({
+        error: true,
+        message: error.message || "Failed to fetch connections",
+      });
+    }
+  }
+);
+
 export const WithdrawConnection = asyncHandler(
   async (req: Request, res: Response) => {
     try {

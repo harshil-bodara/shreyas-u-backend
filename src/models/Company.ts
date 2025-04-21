@@ -5,7 +5,7 @@ const companySchema = new Schema<ICompany>(
   {
     name: String,
     description: String,
-    logo: String,
+    coverImage: String,
     tags: [String],
     followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },

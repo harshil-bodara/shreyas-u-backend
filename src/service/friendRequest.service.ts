@@ -56,8 +56,8 @@ export const getFriendRequests = async (userId: string) => {
   const requests = await FriendRequest.find({
     $or: [{ sender: userId }, { receiver: userId }],
   })
-    .populate("sender", "username email profile")
-    .populate("receiver", "username email profile")
+    .populate("sender", "username email coverImage")
+    .populate("receiver", "username email coverImage")
     .sort({ createdAt: -1 });
 
   return requests;
