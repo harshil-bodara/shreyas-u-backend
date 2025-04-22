@@ -67,7 +67,13 @@ export const getUsersForInvitation = async (userId: string) => {
     }
 
     const usersWithStatus = allUsers
-      .filter(user => !ignoredUserIds.has(user._id.toString()))
+    .filter(user => {
+      const userIdStr = user._id.toString();
+      const requestInfo = friendRequestMap[userIdStr];
+      const isIgnored = ignoredUserIds.has(userIdStr);
+      const isAlreadyFriend = requestInfo?.status === "accepted";
+      return !isIgnored && !isAlreadyFriend;
+    })
       .map(user => {
         const userIdStr = user._id.toString();
         const requestInfo = friendRequestMap[userIdStr] || null;
