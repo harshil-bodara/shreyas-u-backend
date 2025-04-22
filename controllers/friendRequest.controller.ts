@@ -16,8 +16,8 @@ export const handleFriendRequest = asyncHandler(
     try {
       switch (type) {
         case "send": {
-          const { receiverId } = req.body;
-          await FriendRequestService.sendFriendRequest(userId, receiverId);
+          const { receiverId,comment } = req.body;
+          await FriendRequestService.sendFriendRequest(userId, receiverId,comment);
           return res
             .status(201)
             .json({

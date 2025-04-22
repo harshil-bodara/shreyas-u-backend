@@ -3,7 +3,8 @@ import User from "../models/User";
 
 export const sendFriendRequest = async (
   senderId: string,
-  receiverId: string
+  receiverId: string,
+  comment?: string
 ) => {
   const existing = await FriendRequest.findOne({
     sender: senderId,
@@ -16,8 +17,8 @@ export const sendFriendRequest = async (
     receiver: receiverId,
     status: "pending",
     requestedAt: new Date(),
+    comment: comment || "",
   });
-
   return { message: "Friend request sent", request };
 };
 

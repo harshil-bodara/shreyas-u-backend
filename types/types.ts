@@ -14,6 +14,7 @@ export interface IUser extends Document {
 export interface IFriendRequest extends Document {
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
+  comment:string,
   status: "pending" | "accepted" | "rejected";
   requestedAt: Date;
   acceptedAt?: Date;

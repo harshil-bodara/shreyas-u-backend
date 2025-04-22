@@ -5,6 +5,7 @@ const friendRequestSchema = new Schema<IFriendRequest>(
   {
     sender: { type: Schema.Types.ObjectId, ref: "User" },
     receiver: { type: Schema.Types.ObjectId, ref: "User" },
+    comment: String,
     status: {
       type: String,
       enum: ["pending", "accepted", "rejected"],

@@ -31,43 +31,53 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getUsersForInvitation = async (userId: string) => {
   try {
-    const allUsers = await User.find({ _id: { $ne: userId } }).select("-password");
+    const allUsersPromise = User.find({ _id: { $ne: userId } }).select("-password");
 
-    const connectedUsers = await FriendRequest.find({
+    const friendRequestsPromise = FriendRequest.find({
       $or: [
-        { sender: userId, status: "accepted" },
-        { receiver: userId, status: "accepted" },
+        { sender: userId },
+        { receiver: userId }
       ],
+      status: { $in: ["accepted", "pending"] }
     });
 
-    const connectedUserIds = connectedUsers.map((req) =>
-      req.sender.toString() === userId ? req.receiver : req.sender
+    const ignoredEntriesPromise = UserIgnore.find({ userId });
+
+    const [allUsers, friendRequests, ignoredEntries] = await Promise.all([
+      allUsersPromise,
+      friendRequestsPromise,
+      ignoredEntriesPromise
+    ]);
+
+    const ignoredUserIds = new Set<string>(
+      ignoredEntries
+        .map(entry => entry.ignoredUserId)
+        .filter((id): id is Types.ObjectId => id != null && typeof id === "object" && typeof id.toString === "function")
+        .map(id => id.toString())
     );
 
-    const ignoredEntries = await UserIgnore.find({ userId });
-    const ignoredUserIds = ignoredEntries.map((entry) => entry.ignoredUserId);
+    const friendRequestMap: Record<string, { status: string; comment: string | null }> = {};
 
-    const pendingRequests = await FriendRequest.find({
-      $or: [
-        { sender: userId, status: "pending" },
-        { receiver: userId, status: "pending" },
-      ],
-    });
+    for (const req of friendRequests) {
+      const otherUserId = req.sender.toString() === userId ? req.receiver.toString() : req.sender.toString();
+      friendRequestMap[otherUserId] = {
+        status: req.status,
+        comment: req.comment || null,
+      };
+    }
 
-    const pendingRequestUserIds = pendingRequests.map((req) =>
-      req.sender.toString() === userId ? req.receiver : req.sender
-    );
+    const usersWithStatus = allUsers
+      .filter(user => !ignoredUserIds.has(user._id.toString()))
+      .map(user => {
+        const userIdStr = user._id.toString();
+        const requestInfo = friendRequestMap[userIdStr] || null;
+        return {
+          ...user.toObject(),
+          comment: requestInfo?.comment || null,
+        };
+      });
 
-    const usersToInvite = allUsers.filter((user) => {
-      const userIdStr = user._id.toString();
-      return (
-        !connectedUserIds.some((id) => id && id.toString() === userIdStr) &&
-        !ignoredUserIds.some((id) => id && id.toString() === userIdStr) &&
-        !pendingRequestUserIds.some((id) => id && id.toString() === userIdStr)
-      );
-    });
-
-    return usersToInvite;
+    return usersWithStatus;
   } catch (error) {
     console.error(error);
     throw new Error("Error fetching users for invitation");
@@ -186,6 +196,7 @@ export const getMyConnections = async (userId: string) => {
         coverImage: string;
       };
       status: string;
+      comment: string;
     }[];
 
     // Friend requests the user received and were accepted
@@ -202,6 +213,7 @@ export const getMyConnections = async (userId: string) => {
         coverImage: string;
       };
       status: string;
+      comment: string;
     }[];
 
     // Combine both directions into a single list
@@ -213,6 +225,7 @@ export const getMyConnections = async (userId: string) => {
         city: request.receiver.city,
         designation: request.receiver.designation,
         coverImage: request.receiver.coverImage,
+        comment: request.comment || null,
         type: "user",
       })),
       ...receivedAcceptedRequests.map((request) => ({
@@ -222,6 +235,7 @@ export const getMyConnections = async (userId: string) => {
         city: request.sender.city,
         designation: request.sender.designation,
         coverImage: request.sender.coverImage,
+        comment: request.comment || null,
         type: "user",
       })),
     ];
@@ -250,49 +264,6 @@ export const getMyConnections = async (userId: string) => {
     throw new Error(error.message);
   }
 };
-
-// export const withdrawConnection = async (
-//   userId: string,
-//   targetUserId: string
-// ) => {
-//   try {
-//     const request = await FriendRequest.findOne({
-//       $or: [
-//         { sender: userId, receiver: targetUserId },
-//         { sender: targetUserId, receiver: userId },
-//       ],
-//       status: { $in: ["pending", "accepted"] },
-//     });
-
-//     if (!request) {
-//       throw new Error("No pending or accepted connection found to withdraw");
-//     }
-
-//     // If it's pending, allow withdraw by delete
-//     if (request.status === "pending") {
-//       await FriendRequest.deleteOne({ _id: request._id });
-//     }
-
-//     // If it's accepted, remove and update connection counts
-//     if (request.status === "accepted") {
-//       await FriendRequest.deleteOne({ _id: request._id });
-
-//       await Promise.all([
-//         User.findByIdAndUpdate(userId, { $inc: { connections: -1 } }),
-//         User.findByIdAndUpdate(targetUserId, { $inc: { connections: -1 } }),
-//       ]);
-//     }
-
-//     return {
-//       message: "Connection withdrawn successfully",
-//       connectionRemoved: true,
-//       status: request.status,
-//       targetUserId,
-//     };
-//   } catch (error: any) {
-//     throw new Error(error.message || "Failed to withdraw connection");
-//   }
-// };
 
 
 export const withdrawConnection = async (
